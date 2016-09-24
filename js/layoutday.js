@@ -86,76 +86,97 @@ function getColumnValues(events) {
   return cloned;
 }
 
-
-function handleStartEvent(id, events, columnsInUse) {
-  var columnValue = events[id];
-  columnValue.columnIndex = assignColumn(columnsInUse, id);
-  // columnValue.columns = 
-  for (const id of columnsInUse) {
-    // var id = columnsInUse[k];
-    if (events[id]) {
-      events[id].columns = Math.max(events[id].columns, columnsInUse.columns);
-
-    }
-  }
-  return true;
-}
-
 /**
-* Given an object indicating columns in use, return the next unused column index
-* Update the count if the new index is greater that the greatest index so far
-* (i.e all other indexes up to the previous greatest index are full)
-*
-* @param {Object} columnsInUse An object with this shape { 1: true, 3: true, count: 2 }
+* activeEventCount vs. columnCount
+*   columnCount may increase as events are added but only resets to zero when all ongoing
+*   events end.
+*   activeEventCount increases and decreases as events start and end.
 */
-function assignColumn({ activeEventCount, columnCount, columnsInUse, id }) {
+function handleStartEvent({ activeEventCount, activeColumns, columnsInStream, 
+  eventsInStream, eventId }) {
+
   var nextColumn = 0;
   activeEventCount++;
 
   // columns are all full, add one more to the end
-  if (activeEventCount > columnCount) {
-    columnCount = activeEventCount;
-    nextColumn = activeEventCount - 1;
+  if (activeEventCount > columnsInStream) {
+    columnsInStream = activeEventCount;
+    nextColumn = activeEventCount - 1;  // -1 because columns are zero-indexed
 
   // find a 'gap' in the columns 
   } else {
-    
-    while ( typeof columnsInUse[nextColumn] === 'number' ) {
+    while ( typeof activeColumns[nextColumn] === 'number' ) {
       nextColumn++;
     }
   }
-  columnsInUse[nextColumn] = id;
+  
+  activeColumns[nextColumn] = eventId;
+  eventsInStream[eventId] = nextColumn;
 
-  return { activeEventCount, columnCount, columnsInUse, nextColumn };
+  return { activeEventCount, columnsInStream };
 }
 
 
-/**
-* Given an object indicating columns in use, remove the column at index i
-* Update the columns property if the index removed was the greatest column
-*
-* @param {Object} columnsInUse An object with this shape { 1: true, 3: true, count: 2 }
-* @param integer i index to remove column
-*/
-function removeColumn({ activeEventCount, columnCount, columnsInUse, i }) {
-  if ( columnsInUse[i] === undefined ) { return false }
 
-  delete columnsInUse[i];
-  activeEventCount--;
+function handleEndEvent({ activeEventCount, activeColumns, columnsInStream,  
+  index }) {
 
-  // only reset the columnCount when the calendar is clear of events
-  if (activeEventCount === 0) {
-    columnCount = 0;
+  if ( activeColumns[index] === undefined ) { 
+    return false 
   }
 
-  return { activeEventCount, columnCount, columnsInUse };
+  delete activeColumns[index];
+  activeEventCount--;
+
+  return { activeEventCount, columnsInStream };
 }
+
+
+/** Assign columnsInStream to all in eventsInStream
+*   Clear columnsInStream = 0, activeColumns, eventsInStream
+*/
+function handleEndStream({ activeEventCount, activeColumns, columnsInStream,
+  eventsInStream, events }) {
+
+  if ( activeEventCount !== 0 ) { throw( 'Cannot end stream with activeEvents' ); }
+  if ( Object.keys(activeColumns).length !== 0 ) { throw( 'Cannot end stream with activeColumns')};
+
+  for ( id in eventsInStream ) {
+    events[id].columns = columnsInStream;
+    events[id].columnIndex = eventsInStream[id];
+  }
+
+  return 0;
+}
+
+/**
+*
+*/
+// function assignColumn({ activeEventCount, columnsInStream, activeColumns, id }) {
+//   var nextColumn = 0;
+//   activeEventCount++;
+
+//   // columns are all full, add one more to the end
+//   if (activeEventCount > columnsInStream) {
+//     columnsInStream = activeEventCount;
+//     nextColumn = activeEventCount - 1;  // -1 because columns are zero-indexed
+
+//   // find a 'gap' in the columns 
+//   } else {
+//     while ( typeof activeColumns[nextColumn] === 'number' ) {
+//       nextColumn++;
+//     }
+//   }
+//   activeColumns[nextColumn] = id;
+
+//   return { activeEventCount, columnsInStream, nextColumn };
+// }
 
 
 module.exports = {
   layOutDay,
   getColumnValues,
   handleStartEvent,
-  assignColumn,
-  removeColumn,
+  handleEndEvent,
+  handleEndStream,
 }
