@@ -1,6 +1,9 @@
 import $ from 'jquery';
 import layOutDay, { generateRandomEvents } from './layOutDay';
 
+/** Generates a random number of events (between 5 and 25)
+*   of length 20 - 180 minutes
+*/
 $('.randomize-button').click(() => {
   const numEvents = Math.floor(Math.random() * 20) + 5;
   const minEventTime = 20;
@@ -8,6 +11,7 @@ $('.randomize-button').click(() => {
   layOutDay(generateRandomEvents(numEvents, maxEventTime, minEventTime));
 });
 
+// testData for the default Calendar view
 const testData = [
   {
     start: 30,

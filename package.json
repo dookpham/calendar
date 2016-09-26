@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --compilers js:babel-core/register spec/*"
+    "test": "mocha --compilers js:babel-core/register spec/*",
+    "createdocs": "jsdoc -d docs -c jsdoc_conf.json  client/layOutDay.js --verbose"
   },
   "repository": {
     "type": "git",
