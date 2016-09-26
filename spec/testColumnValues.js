@@ -1,5 +1,5 @@
-const expect = require('chai').expect;
-const { getColumnValues } = require('../js/layoutday');
+import { expect } from 'chai';
+import { getColumnValues } from '../client/layOutDay';
 
 describe('getColumnValues Tests', () => {
   it('assigns the correct columnIndex and columns value', () => {
@@ -26,7 +26,6 @@ describe('getColumnValues Tests', () => {
       { start: 30, end: 150 }, { start: 600, end: 670 }];
 
     const columnValues = getColumnValues(testData);
-    // console.log(columnValues);
     expect(columnValues[0].columns).to.equal(2);
     expect(columnValues[1].columns).to.equal(2);
     expect(columnValues[2].columns).to.equal(1);

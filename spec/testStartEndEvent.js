@@ -1,6 +1,6 @@
-const expect = require('chai').expect;
-const { handleStartEvent, handleEndStream } = require('../js/layoutday');
-const { testData, testParsed, testResults } = require('./testData');
+import { expect } from 'chai';
+import { handleStartEvent } from '../client/layOutDay';
+import { testParsed, testResults } from './testData';
 
 describe('handleStartEvent Tests', () => {
   let activeEventCount = 0;
@@ -10,7 +10,6 @@ describe('handleStartEvent Tests', () => {
 
 
   testParsed.forEach((e, i) => {
-    // console.log(e, i);
     const r = testResults[i];
 
     it(`handleEvent ${i}, eventType: ${e.eventType}`, () => {
@@ -28,25 +27,10 @@ describe('handleStartEvent Tests', () => {
         activeEventCount -= 1;
       }
 
-      // console.log(activeEventCount, columnsInStream, activeColumns);
       expect(activeEventCount).to.equal(r.activeEventCount);
       expect(columnsInStream).to.equal(r.columnsInStream);
       expect(activeColumns[r.columnIndex]).to.equal(r.columnVal);
       expect(eventsInStream[e.id]).to.equal(r.columnIndex);
     });
   });
-
-  // it('handleEndStream', () => {
-  //   const cloned = testData.map(event => Object.assign({}, event));
-  //   const columnCheck = columnsInStream;
-
-  //   columnsInStream = handleEndStream({ activeEventCount, activeColumns, columnsInStream,
-  //     eventsInStream, events: cloned });
-
-  //   expect(columnsInStream).to.equal(0);
-
-  //   cloned.forEach(event => {
-  //     expect(event.columns).to.equal(columnCheck);
-  //   });
-  // });
 });

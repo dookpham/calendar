@@ -9,5 +9,8 @@ module.exports = {
     "rules": {
       "no-console": "off",
       "import/no-extraneous-dependencies": ["error", {"devDependencies": ['**/spec/*']}]
+    },
+    "env": {
+        "mocha": true
     }
 };
