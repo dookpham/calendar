@@ -4,7 +4,7 @@ body {
 
 .calendar-container {
   margin: 20px auto;
-  width: 800px;
+  width: 760px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -34,11 +34,12 @@ body {
 }
 
 .event-container {
-  width: 660px;
+  width: 600px;
   height: 720px;
   background: #E2E2E2;
   position: relative;
   margin: 0 0 10px;
+  padding: 0 10px;
 }
 
 .event {

@@ -82,7 +82,7 @@ export function getColumnValues(events) {
 
 function assignPositionValues(events) {
   const sideOffset = 10;
-  const eventContainerWidth = 660 - (sideOffset * 2);
+  const eventContainerWidth = 620 - (sideOffset * 2);
   const eventPadding = 10;
 
   const cloned = events.map((e) => {

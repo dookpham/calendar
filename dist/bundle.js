@@ -10424,7 +10424,7 @@
 
 	function assignPositionValues(events) {
 	  var sideOffset = 10;
-	  var eventContainerWidth = 660 - sideOffset * 2;
+	  var eventContainerWidth = 620 - sideOffset * 2;
 	  var eventPadding = 10;
 
 	  var cloned = events.map(function (e) {
