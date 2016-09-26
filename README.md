@@ -10,7 +10,17 @@
 3. [Notes](#notes)
 
 # Usage
-From the root folder, just open dist/index.html and Voila!
+Clone the repo:
+```sh
+$ git clone https://github.com/dookpham/calendar.git
+```
+
+Go to the root folder and open the index.html file:
+```sh
+$ cd calendar
+$ open dist/index.html
+```
+Voila!
 
 A 'Randomize' feature has been added to generate random event layouts for testing and general purpose calendar enjoyment!
 
